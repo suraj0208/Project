@@ -11,7 +11,7 @@ using namespace Crafter;
 int main() {
 
 	/* Set the interface */
-	string iface = "eth0";
+	string iface = "wlan0";
 
 	/* Get the IP address associated to the interface */
 	string MyIP = GetMyIP(iface);
@@ -33,9 +33,7 @@ int main() {
 	RawLayer raw_header("HelloPing!\n");
 
 	struct timespec buf;
-	int r = clock_gettime(0, &buf);
-	printf("Before sending: %ld.%4ld", buf.tv_sec, buf.tv_nsec/100000);
-
+	
 	for (int i = 0; i < NO_PACKETS; i++) {
 		/* Create a packet... */
 		Packet packet;
@@ -44,6 +42,9 @@ int main() {
 		packet.PushLayer(ip_header);
 		packet.PushLayer(icmp_header);
 		packet.PushLayer(raw_header);
+
+		int r = clock_gettime(0, &buf);
+		printf("%ld.%4ld\n", buf.tv_sec, buf.tv_nsec/100000);
 
 
 		/* Send the packet, this would fill the missing fields (like checksum, lengths, etc) */
